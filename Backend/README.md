@@ -180,3 +180,104 @@ curl -X POST http://localhost:4000/users/login \
 - On success, a JWT token is returned for authentication.
 - The token is also set as a cookie named `token`.
 - All required fields must be present
+
+
+---
+
+
+## `/users/profile` Endpoint
+
+### **Description**
+Returns the authenticated user's profile information.  
+Requires a valid JWT token (sent as a cookie or in the `Authorization` header).
+
+---
+
+### **Method**
+`GET`
+
+---
+
+### **Headers**
+- `Authorization: Bearer <JWT Token>` (if not using cookies)
+
+---
+
+### **Responses**
+
+#### **200 OK**
+```json
+{
+  "_id": "...",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "socketId": "..."
+}
+```
+
+#### **401 Unauthorized**
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+---
+
+### **Example Request (curl)**
+```bash
+curl -X GET http://localhost:4000/users/profile \
+  -H "Authorization: Bearer <JWT Token>"
+```
+
+---
+
+## `/users/logout` Endpoint
+
+### **Description**
+Logs out the authenticated user by blacklisting their JWT token and clearing the cookie.
+
+---
+
+### **Method**
+`GET`
+
+---
+
+### **Headers**
+- `Authorization: Bearer <JWT Token>` (if not using cookies)
+
+---
+
+### **Responses**
+
+#### **200 OK**
+```json
+{
+  "message": "Logged out"
+}
+```
+
+#### **401 Unauthorized**
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+---
+
+### **Example Request (curl)**
+```bash
+curl -X GET http://localhost:4000/users/logout \
+  -H "Authorization: Bearer <JWT Token>"
+```
+
+---
+
+### **Notes**
+- The token is blacklisted and cannot be used again.
+- The cookie named `token` is cleared on
