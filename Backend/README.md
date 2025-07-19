@@ -48,8 +48,7 @@ Send a JSON object with the following structure:
       "firstname": "John",
       "lastname": "Doe"
     },
-    "email": "john.doe@example.com",
-    // other user fields
+    "email": "john.doe@example.com"
   }
 }
 ```
@@ -64,7 +63,6 @@ Send a JSON object with the following structure:
       "param": "fullname.firstname",
       "location": "body"
     }
-    // ...other errors
   ]
 }
 ```
@@ -92,4 +90,93 @@ curl -X POST http://localhost:4000/users/register \
 
 ### **Notes**
 - On success, a JWT token is returned for authentication.
-- All required fields must be present and
+- All required fields must be present and valid.
+
+---
+
+## `/users/login` Endpoint
+
+### **Description**
+Authenticates a user and returns a JWT token if credentials are valid.
+
+---
+
+### **Method**
+`POST`
+
+---
+
+### **Request Body Format**
+
+Send a JSON object with the following structure:
+
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "yourpassword"
+}
+```
+
+#### **Field Requirements**
+- `email` (string, required, must be a valid email)
+- `password` (string, required, min 6 characters)
+
+---
+
+### **Responses**
+
+#### **200 OK**
+```json
+{
+  "token": "<JWT Token>",
+  "user": {
+    "_id": "...",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+#### **400 Bad Request**
+- Validation errors.
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid Email",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### **401 Unauthorized**
+- Invalid email or password.
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+---
+
+### **Example Request (curl)**
+```bash
+curl -X POST http://localhost:4000/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john.doe@example.com",
+    "password": "yourpassword"
+  }'
+```
+
+---
+
+### **Notes**
+- On success, a JWT token is returned for authentication.
+- The token is also set as a cookie named `token`.
+- All required fields must be present
